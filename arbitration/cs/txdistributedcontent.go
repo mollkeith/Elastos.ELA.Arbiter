@@ -734,11 +734,13 @@ func checkWithdrawFromSideChainPayload(txn it.Transaction,
 	crossChainOutputsMap := make(map[string]common.Fixed64)
 			
 	frozenAddressMap := make(map[string]bool)
+	log.Info("##### forzen address from config:", config.Parameters.FrozenAddresses)
 	for _, frozenAddress := range config.Parameters.FrozenAddresses {
 		frozenAddressMap[frozenAddress] = true
 	}
 	for _, tx := range txs {
 		for _, w := range tx.WithdrawInfo.WithdrawAssets {
+			log.Info("##### withdraw address to compare frozen address:", w.TargetAddress)
 			if _, ok := frozenAddressMap[w.TargetAddress]; ok {
 				return errors.New("[checkWithdrawTransaction] invalid cross chain address in tx: frozen address, " + w.TargetAddress)
 			}
